@@ -37,7 +37,6 @@
     - [為什麼是 C？](#為什麼是-c)
     - [取捨](#取捨)
   - [參考資料](#參考資料)
-  - [License](#license)
 
 ---
 
@@ -164,7 +163,8 @@ jp_pool_destroy(pool);                              // O(blocks)
 字元中間截斷。本專案以位元遮罩在 byte stream 層級處理：
 
 ```c
-static inline int utf8_char_len(uint8_t lead) {
+static inline int utf8_char_len(uint8_t lead)
+{
     if ((lead & 0x80) == 0x00) return 1;   // ASCII
     if ((lead & 0xE0) == 0xC0) return 2;
     if ((lead & 0xF0) == 0xE0) return 3;   // ← 日文在此
@@ -195,16 +195,18 @@ Radix Tree (邊壓縮):
 #### 節點空間優化（union 技巧）
 
 ```c
-typedef struct jp_rnode {
-    uint8_t          *edge;        // 邊標籤 bytes
-    uint16_t          edge_len;
-    uint8_t           n_children;
-    uint8_t           flags;
-    union {
-        struct jp_rnode **children;  // 內部節點
-        void             *leaf_val;  // 葉節點直接存值
+typedef struct jp_rnode
+{
+    uint8_t* edge;        // 邊標籤 bytes
+    uint16_t edge_len;
+    uint8_t n_children;
+    uint8_t flags;
+    union
+    {
+        struct jp_rnode** children;  // 內部節點
+        void* leaf_val;  // 葉節點直接存值
     } u;
-    void             *value;
+    void* value;
 } jp_rnode_t;
 ```
 
@@ -250,10 +252,11 @@ After: parent → child[edge="tabe"]
 
 ```c
 // 五段-く動詞的活用規則
-[VT_GODAN_KU] = {
-    [FORM_MASU]  = {2, "kimasu"},   // 書く → 書 + kimasu = 書きます
-    [FORM_TE]    = {2, "ite"},      // 書く → 書 + ite    = 書いて
-    [FORM_NAI]   = {2, "kanai"},    // 書く → 書 + kanai  = 書かない
+[VT_GODAN_KU] = 
+{
+    [FORM_MASU] = {2, "kimasu"}, // 書く → 書 + kimasu = 書きます
+    [FORM_TE] = {2, "ite"},      // 書く → 書 + ite    = 書いて
+    [FORM_NAI] = {2, "kanai"},   // 書く → 書 + kanai  = 書かない
     // ...
 };
 ```
@@ -320,29 +323,33 @@ substring 的最小化 DFA。性質：
 #### 線上構造（核心 30 行）
 
 ```c
-void jp_sam_extend(jp_sam_t *sam, int c) {
+void jp_sam_extend(jp_sam_t* sam, int c)
+{
     int cur = sam_new_state(sam);
     sam->st[cur].len = sam->st[sam->last].len + 1;
-
     int p = sam->last;
-    while (p != NIL && sam->st[p].next[c] == NIL) {
+    while (p != NIL && sam->st[p].next[c] == NIL)
+    {
         sam->st[p].next[c] = cur;
         p = sam->st[p].link;
     }
 
-    if (p == NIL)                      sam->st[cur].link = 0;
-    else {
+    if (p == NIL) sam->st[cur].link = 0;
+    else
+    {
         int q = sam->st[p].next[c];
         if (sam->st[p].len + 1 == sam->st[q].len) sam->st[cur].link = q;
-        else {                          // 分裂 q，建立 clone
+        else
+        {
             int clone = sam_new_state(sam);
             sam->st[clone] = sam->st[q];
             sam->st[clone].len = sam->st[p].len + 1;
-            while (p != NIL && sam->st[p].next[c] == q) {
+            while (p != NIL && sam->st[p].next[c] == q)
+            {
                 sam->st[p].next[c] = clone;
                 p = sam->st[p].link;
             }
-            sam->st[q].link   = clone;
+            sam->st[q].link = clone;
             sam->st[cur].link = clone;
         }
     }
@@ -407,9 +414,3 @@ T = "usam" + "$" + "et" + "$" + "atihsam" + "$" + ...
 - Blumer, A., Blumer, J., Haussler, D., et al. *The smallest automaton recognizing the subwords of a text*. Theoretical Computer Science 40, 1985.
 - Vladimir Levenshtein, *Binary codes capable of correcting deletions, insertions, and reversals*, 1966.
 - 庵功雄、清水百合（共著）《日本語文型辞典》（くろしお出版）— 動詞活用對照。
-
----
-
-## License
-
-MIT License — free to use, modify, and learn from.
