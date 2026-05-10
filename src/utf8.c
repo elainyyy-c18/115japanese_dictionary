@@ -62,7 +62,7 @@ int utf8_encode(uint32_t cp, uint8_t* buf)
 size_t utf8_cp_count(const uint8_t* s, size_t byte_len) 
 {
     size_t count = 0;
-    const uint8_t* end  = s + byte_len;
+    const uint8_t* end = s + byte_len;
     while (s < end) 
     {
         int n = utf8_char_len(*s);
