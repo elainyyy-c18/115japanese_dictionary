@@ -1,4 +1,4 @@
-# jpdict — 日文動詞詞典與活用引擎（C 語言實作）
+# jpdict — 日文動詞詞典與活用引擎
 
 > 一個從零打造的高效能日文動詞活用詞典，以 C 語言探索資工核心資料結構與演算法。
 
@@ -53,8 +53,6 @@
 | 5 | Levenshtein DP | 拼字錯誤容忍 |
 | 6 | Suffix Automaton | 線性時間後綴匹配 |
 
-整體規模：約 **1900 行 C11 程式碼**，無第三方依賴。
-
 ---
 
 ## 核心技術一覽
@@ -91,18 +89,18 @@ jpdict/
 ├── README.md
 ├── .gitignore
 ├── include/
-│   ├── pool.h               記憶體池
+│   ├── memory_pool.h        記憶體池
 │   ├── utf8.h               UTF-8 編碼工具
-│   ├── radix.h              Radix Tree
-│   ├── fsa.h                有限狀態自動機（活用引擎）
+│   ├── radix_tree.h         Radix Tree
+│   ├── fsa_conjugation.h    有限狀態自動機（活用引擎）
 │   ├── fuzzy_search.h       Levenshtein 模糊比對
 │   ├── suffix_automaton.h   後綴自動機
 │   └── dict.h               詞典高層介面
 └── src/
-    ├── pool.c
+    ├── memory_pool.c
     ├── utf8.c
-    ├── radix.c
-    ├── fsa.c
+    ├── radix_tree.c
+    ├── fsa_conjugation.c
     ├── fuzzy_search.c
     ├── suffix_automaton.c
     ├── dict.c
@@ -396,7 +394,6 @@ T = "usam" + "$" + "et" + "$" + "atihsam" + "$" + ...
 - 完全控制記憶體配置（pool 設計）
 - 直接操作 byte 流（UTF-8 處理）
 - 沒有 hidden allocations，效能可預期
-- 接近資工教科書的演算法純粹度
 
 ### 取捨
 
@@ -405,12 +402,3 @@ T = "usam" + "$" + "et" + "$" + "atihsam" + "$" + ...
 - **Radix Tree 不支援 delete**：日文詞典極少需要刪除詞條
 - **SAM 用固定大小 ASCII 表**：日文後綴在內部以羅馬字處理，
   簡化字母表至 27（a-z + '$'）
-
----
-
-## 參考資料
-
-- Donald R. Morrison, *PATRICIA—Practical Algorithm to Retrieve Information Coded in Alphanumeric*, JACM 15(4), 1968.
-- Blumer, A., Blumer, J., Haussler, D., et al. *The smallest automaton recognizing the subwords of a text*. Theoretical Computer Science 40, 1985.
-- Vladimir Levenshtein, *Binary codes capable of correcting deletions, insertions, and reversals*, 1966.
-- 庵功雄、清水百合（共著）《日本語文型辞典》（くろしお出版）— 動詞活用對照。
