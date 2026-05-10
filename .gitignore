@@ -1,4 +1,61 @@
+# 編譯產物 
+build/
+bin/
 *.o
-*.out
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
 *.exe
+jpdict
+jpdict.exe
+
+# 編譯器 / IDE 中介檔
+*.d
+*.gch
+*.pch
+*.bc
+*.gcno
+*.gcda
+*.gcov
+compile_commands.json
+.cache/
+
+# 除錯與分析
+core
+core.*
+vgcore.*
+*.dSYM/
+*.stackdump
+perf.data
+perf.data.old
+*.out
+
+# 編輯器 / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+*.iml
+.cproject
+.project
+.settings/
+.ccls-cache/
+.clangd/
+
+# 動態文件、暫存
+*.log
+*.tmp
+tmp/
+temp/
+
+# 避免不小心 commit
+NOTES.md
+TODO.md
+scratch/
