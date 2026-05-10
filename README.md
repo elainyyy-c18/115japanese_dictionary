@@ -28,9 +28,9 @@
       - [DP 遞推](#dp-遞推)
       - [空間優化（Rolling Array）](#空間優化rolling-array)
       - [早期剪枝](#早期剪枝)
-    - [6. Suffix Automaton (後綴自動機)](#6-suffix-automaton-後綴自動機)
+    - [6. Suffix Automaton](#6-suffix-automaton)
       - [經典定義](#經典定義)
-      - [線上構造（核心 30 行）](#線上構造核心-30-行)
+      - [線上構造](#線上構造)
       - [本專案的應用](#本專案的應用)
   - [演算法複雜度總表](#演算法複雜度總表)
   - [設計思路](#設計思路)
@@ -302,7 +302,7 @@ After: parent → child[edge="tabe"]
 
 ---
 
-### 6. Suffix Automaton (後綴自動機)
+### 6. Suffix Automaton
 
 #### 經典定義
 
@@ -321,7 +321,7 @@ substring 的最小化 DFA。性質：
 - `link[v]`：suffix link，指向最長真後綴所在等價類別
 - `next[v][c]`：δ 轉移
 
-#### 線上構造（核心 30 行）
+#### 線上構造
 
 ```c
 void jp_sam_extend(jp_sam_t* sam, int c)
