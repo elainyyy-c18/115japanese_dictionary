@@ -1,7 +1,7 @@
 #include "../include/dict.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>\
+#include <stdlib.h>
 
 jp_dict_t* jp_dict_new()
 {
@@ -138,10 +138,19 @@ int jp_dict_load_csv(jp_dict_t* d, const char* filepath)
     int count = 0;
     while (fgets(line, sizeof(line), fp))
     {
-        line[strcspn(line, "\r\n")] = '\0';
-        if (line[0] == '\0' || line[0] == '#') continue;
+        char* start = line;
+        if (first_line)
+        {
+            first_line = 0;
+            if ((unsigned char)start[0] == 0xEF && (unsigned char)start[1] == 0xBB && (unsigned char)start[2] == 0xBF) {
+                start += 3;
+            }
+        }
+        start[strcspn(start, "\r\n")] = '\0';
+        if (start[0] == '\0' || start[0] == '#') continue;
+ 
         char* f[5];
-        char* p = line;
+        char* p = start;
         int n = 0;
         while (n < 5 && p)
         {
@@ -157,7 +166,6 @@ int jp_dict_load_csv(jp_dict_t* d, const char* filepath)
             fprintf(stderr, "[CSV] 未知動詞類型 \"%s\"，略過 %s\n", f[3], f[0]);
             continue;
         }
-
         uint32_t flags = 0;
         if (!strcmp(f[4], "iku_irregular")) flags = VERB_FLAG_IKU_IRREGULAR;
 
