@@ -18,6 +18,7 @@ uint32_t utf8_decode(const uint8_t** p, const uint8_t* end);
 int utf8_encode(uint32_t cp, uint8_t* buf);
 size_t utf8_cp_count(const uint8_t* s, size_t byte_len);
 size_t utf8_common_prefix_bytes(const uint8_t* a, const uint8_t* b);
+size_t utf8_common_prefix_bytes_n(const uint8_t* a, size_t la, const uint8_t* b, size_t lb);
 
 static inline bool utf8_is_hiragana (uint32_t cp)
 {
