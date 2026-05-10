@@ -100,8 +100,9 @@ make clean
 **方法二：手動編譯（適用無 make 的 Windows 環境）**
 
 ```bash
-gcc src/*.c -Iinclude -o jp_dict -Wall -O2
-./jp_dict.exe
+mkdir -p bin
+gcc src/*.c -Iinclude -o bin/jp_dict -Wall -O2
+./bin/jp_dict
 ```
 
 > **⚠️ 執行位置很重要**：必須從**專案根目錄**執行，程式才能找到 `data/verbs.csv`。

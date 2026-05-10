@@ -173,7 +173,6 @@ int jp_dict_load_csv(jp_dict_t *d, const char *filepath)
         if (!strcmp(f[4], "iku_irregular")) flags = VERB_FLAG_IKU_IRREGULAR;
         if (jp_dict_add(d, f[0], f[1], f[2], vt, flags)) count++;
     }
-
     fclose(fp);
     return count;
 }
