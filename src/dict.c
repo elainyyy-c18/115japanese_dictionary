@@ -1,9 +1,9 @@
 #include "../include/dict.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
+#include <stdlib.h>\
 
-jp_dict_t* jp_dict_new(void)
+jp_dict_t* jp_dict_new()
 {
     jp_pool_t* pool = jp_pool_new(0);
     if (!pool) return NULL;
@@ -41,10 +41,12 @@ const jp_verb_t* jp_dict_add(jp_dict_t* d, const char* dict_form, const char* hi
     v->vtype = vtype;
     v->flags = flags;
 
-    if (jp_radix_insert(d->tree, (const uint8_t *)v->dict_form, strlen(v->dict_form), v) != 0) return NULL;
+    if (jp_radix_insert(d->tree, (const uint8_t *)v->dict_form, strlen(v->dict_form), v) != 0)
+        return NULL;
     d->verbs[d->n_verbs++] = v;
     return v;
 }
+
 const jp_verb_t* jp_dict_lookup(const jp_dict_t* d, const char* dict_form)
 {
     if (!d || !dict_form) return NULL;
@@ -109,4 +111,59 @@ void jp_dict_show_stats(const jp_dict_t* d)
     if (!d) return;
     printf("\n[Dict] verbs=%zu  radix_keys=%zu  radix_nodes=%zu\n", d->n_verbs, d->tree->n_keys, d->tree->n_nodes);
     jp_pool_stats(d->pool);
+}
+
+static verb_type_t parse_vtype(const char* s)
+{
+    if (!strcmp(s, "godan_u")) return VT_GODAN_U;
+    if (!strcmp(s, "godan_ku")) return VT_GODAN_KU;
+    if (!strcmp(s, "godan_gu")) return VT_GODAN_GU;
+    if (!strcmp(s, "godan_su")) return VT_GODAN_SU;
+    if (!strcmp(s, "godan_tsu")) return VT_GODAN_TSU;
+    if (!strcmp(s, "godan_nu")) return VT_GODAN_NU;
+    if (!strcmp(s, "godan_bu")) return VT_GODAN_BU;
+    if (!strcmp(s, "godan_mu")) return VT_GODAN_MU;
+    if (!strcmp(s, "godan_ru")) return VT_GODAN_RU;
+    if (!strcmp(s, "ichidan")) return VT_ICHIDAN;
+    if (!strcmp(s, "suru")) return VT_SURU;
+    if (!strcmp(s, "kuru")) return VT_KURU;
+    return (verb_type_t)-1;
+}
+
+int jp_dict_load_csv(jp_dict_t* d, const char* filepath)
+{
+    FILE *fp = fopen(filepath, "r");
+    if (!fp) return -1;
+    char line[512];
+    int count = 0;
+    while (fgets(line, sizeof(line), fp))
+    {
+        line[strcspn(line, "\r\n")] = '\0';
+        if (line[0] == '\0' || line[0] == '#') continue;
+        char* f[5];
+        char* p = line;
+        int n = 0;
+        while (n < 5 && p)
+        {
+            f[n++] = p;
+            p = strchr(p, '|');
+            if (p) *p++ = '\0';
+        }
+        if (n < 5) continue;
+
+        verb_type_t vt = parse_vtype(f[3]);
+        if ((int)vt < 0)
+        {
+            fprintf(stderr, "[CSV] 未知動詞類型 \"%s\"，略過 %s\n", f[3], f[0]);
+            continue;
+        }
+
+        uint32_t flags = 0;
+        if (!strcmp(f[4], "iku_irregular")) flags = VERB_FLAG_IKU_IRREGULAR;
+
+        if (jp_dict_add(d, f[0], f[1], f[2], vt, flags))
+            count++;
+    }
+    fclose(fp);
+    return count;
 }

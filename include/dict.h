@@ -6,7 +6,7 @@
 #include "fsa_conjugation.h"
 #include <stddef.h>
 
-#define DICT_MAX_VERBS 512
+#define DICT_MAX_VERBS  512
 
 typedef struct jp_dict
 {
@@ -16,14 +16,15 @@ typedef struct jp_dict
     size_t n_verbs;
 } jp_dict_t;
 
-jp_dict_t* jp_dict_new(void);
+jp_dict_t* jp_dict_new();
 void jp_dict_destroy(jp_dict_t* d);
 const jp_verb_t* jp_dict_add(jp_dict_t* d, const char* dict_form, const char* hiragana, const char* meaning, verb_type_t vtype, uint32_t flags);
+int jp_dict_load_csv(jp_dict_t* d, const char* filepath);
 const jp_verb_t* jp_dict_lookup(const jp_dict_t* d, const char* dict_form);
 size_t jp_dict_prefix_search(const jp_dict_t* d, const char* prefix, const jp_verb_t** out, size_t max_out);
 
-void jp_dict_show_verb(const jp_verb_t* verb);
-void jp_dict_show_conjugations(const jp_verb_t* verb);
-void jp_dict_show_stats(const jp_dict_t* d);
+void jp_dict_show_verb (const jp_verb_t* verb);
+void jp_dict_show_conjugations (const jp_verb_t* verb);
+void jp_dict_show_stats (const jp_dict_t* d);
 
 #endif

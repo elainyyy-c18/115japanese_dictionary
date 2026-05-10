@@ -124,11 +124,32 @@ int main()
     // §1 載入詞典
     section("§1  載入詞典");
     jp_dict_t* dict = jp_dict_new();
-    load_verbs(dict);
-    printf("詞典已載入：%zu 個動詞詞條。\n", dict->n_verbs);
+    const char *csv_paths[] =
+    {
+        "data/verbs.csv",
+        "../data/verbs.csv",
+    };
+    int loaded = -1;
+    const char* used_path = NULL;
+    for (size_t i = 0; i < sizeof(csv_paths)/sizeof(*csv_paths); i++)
+    {
+        loaded = jp_dict_load_csv(dict, csv_paths[i]);
+        if (loaded >= 0)
+        {
+            used_path = csv_paths[i];
+            break;
+        }
+    }
+    if (loaded > 0) printf("從 %s 載入：%d 個動詞詞條。\n", used_path, loaded);
+    else 
+    {
+        printf("找不到 CSV 檔案，使用內建詞條...\n");
+        load_verbs(dict);
+        printf("內建詞典已載入：%zu 個動詞詞條。\n", dict->n_verbs);
+    }
 
     // §2 Radix Tree 結構
-    section("§2  Radix Tree 結構（節點壓縮後）");
+    section("§2  Radix Tree 結構");
     printf("（共享前綴的單字節點被合併成單邊標籤）\n\n");
     jp_radix_dump(dict->tree);
 
@@ -157,7 +178,8 @@ int main()
     section("§5  FSA 活用引擎");
 
     const char* demo_verbs[] = {"taberu", "kaku", "iku", "matsu", "asobu", "hanasu", "suru", "kuru"};
-    for (size_t i = 0; i < sizeof(demo_verbs)/sizeof(*demo_verbs); i++) {
+    for (size_t i = 0; i < sizeof(demo_verbs)/sizeof(*demo_verbs); i++)
+    {
         const jp_verb_t *v = jp_dict_lookup(dict, demo_verbs[i]);
         if (v) jp_dict_show_conjugations(v);
     }
@@ -250,6 +272,7 @@ int main()
         const char* idesc = NULL;
         verb_form_t iform = jp_sam_identify(isam, line, imatch, sizeof(imatch), &idesc);
         jp_sam_destroy(isam);
+        
         if ((int)iform >= 0 && imatch[0])
             printf("\n  [SAM] 語尾 \"%s\" -> %s (%s) \n", imatch, jp_form_name(iform), idesc ? idesc : "");
 
