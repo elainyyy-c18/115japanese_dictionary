@@ -28,6 +28,7 @@ void jp_dict_destroy(jp_dict_t* d)
     if (!d) return;
     jp_pool_destroy(d->pool);
 }
+
 const jp_verb_t* jp_dict_add(jp_dict_t* d, const char* dict_form, const char* hiragana, const char* meaning, verb_type_t vtype, uint32_t flags)
 {
     if (!d || !dict_form) return NULL;
@@ -40,9 +41,7 @@ const jp_verb_t* jp_dict_add(jp_dict_t* d, const char* dict_form, const char* hi
     if (meaning) strncpy(v->meaning, meaning, sizeof(v->meaning) - 1);
     v->vtype = vtype;
     v->flags = flags;
-
-    if (jp_radix_insert(d->tree, (const uint8_t *)v->dict_form, strlen(v->dict_form), v) != 0)
-        return NULL;
+    if (jp_radix_insert(d->tree, (const uint8_t *)v->dict_form, strlen(v->dict_form), v) != 0) return NULL;
     d->verbs[d->n_verbs++] = v;
     return v;
 }
@@ -101,8 +100,7 @@ void jp_dict_show_conjugations(const jp_verb_t* v)
     printf("├────────────────────────────────────────────────────────┤\n");
     for (verb_form_t f = FORM_DICT; f < FORM_COUNT; f++)
     {
-        if (jp_fsa_conjugate(v, f, buf, sizeof(buf)))
-            printf("│  %-13s  %s\n", jp_form_name(f), buf);
+        if (jp_fsa_conjugate(v, f, buf, sizeof(buf))) printf("│  %-13s  %s\n", jp_form_name(f), buf);
     }
     printf("└────────────────────────────────────────────────────────┘\n");
 }
@@ -130,28 +128,34 @@ static verb_type_t parse_vtype(const char* s)
     return (verb_type_t)-1;
 }
 
-int jp_dict_load_csv(jp_dict_t* d, const char* filepath)
+int jp_dict_load_csv(jp_dict_t *d, const char *filepath)
 {
-    FILE *fp = fopen(filepath, "r");
-    if (!fp) return -1;
+    FILE*fp;
     char line[512];
+    char* start;
+    char* f[5];
+    char* p;
     int count = 0;
+    int first_line = 1;
+    int n;
+    verb_type_t vt;
+    uint32_t flags;
+
+    fp = fopen(filepath, "r");
+    if (!fp) return -1;
+
     while (fgets(line, sizeof(line), fp))
     {
-        char* start = line;
+        start = line;
         if (first_line)
         {
             first_line = 0;
-            if ((unsigned char)start[0] == 0xEF && (unsigned char)start[1] == 0xBB && (unsigned char)start[2] == 0xBF) {
-                start += 3;
-            }
+            if ((unsigned char)start[0] == 0xEF && (unsigned char)start[1] == 0xBB && (unsigned char)start[2] == 0xBF) start += 3;
         }
         start[strcspn(start, "\r\n")] = '\0';
         if (start[0] == '\0' || start[0] == '#') continue;
- 
-        char* f[5];
-        char* p = start;
-        int n = 0;
+        p = start;
+        n = 0;
         while (n < 5 && p)
         {
             f[n++] = p;
@@ -159,19 +163,17 @@ int jp_dict_load_csv(jp_dict_t* d, const char* filepath)
             if (p) *p++ = '\0';
         }
         if (n < 5) continue;
-
-        verb_type_t vt = parse_vtype(f[3]);
+        vt = parse_vtype(f[3]);
         if ((int)vt < 0)
         {
             fprintf(stderr, "[CSV] 未知動詞類型 \"%s\"，略過 %s\n", f[3], f[0]);
             continue;
         }
-        uint32_t flags = 0;
+        flags = 0;
         if (!strcmp(f[4], "iku_irregular")) flags = VERB_FLAG_IKU_IRREGULAR;
-
-        if (jp_dict_add(d, f[0], f[1], f[2], vt, flags))
-            count++;
+        if (jp_dict_add(d, f[0], f[1], f[2], vt, flags)) count++;
     }
+
     fclose(fp);
     return count;
 }
