@@ -110,7 +110,7 @@ jpdict/
 
 ## 編譯與執行
 
-需要 GCC 或 Clang（C11 支援）+ GNU Make。
+【方法一】使用 Makefile (推薦，適用於 Linux / macOS / MinGW)
 
 ```bash
 make            # 編譯 release 版（-O2）
@@ -129,9 +129,9 @@ make clean
 7. Suffix Automaton 後綴識別
 8. Memory Pool 統計
 
-或直接在 terminal 輸入：
-gcc src/*.c -Iinclude -o jp_dict -Wall -O2
-./jp_dict.exe
+【方法二】手動編譯 (適用於無 make 工具之 Windows 環境)
+1. 編譯：`gcc src/*.c -Iinclude -o jp_dict -Wall -O2`
+2. 執行：`./jp_dict.exe`
 
 ---
 
