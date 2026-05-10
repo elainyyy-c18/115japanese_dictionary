@@ -7,7 +7,7 @@
 typedef struct
 {
     const jp_verb_t* verb;
-    int istance;
+    int distance;
 } fuzzy_match_t;
 
 int jp_levenshtein(const char* a, const char* b, int max_dist);
