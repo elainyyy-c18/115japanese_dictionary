@@ -1,18 +1,22 @@
-#include "../include/pool.h"
+#include "../include/memory_pool.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 static inline size_t align_up(size_t n) 
 {
     return (n + POOL_ALIGN - 1u) & ~(POOL_ALIGN - 1u);
 }
-static jp_block_t *block_new(size_t cap) 
+static jp_block_t* block_new(size_t cap) 
 {
-    jp_block_t *b = (jp_block_t *)malloc(sizeof(jp_block_t));
+    jp_block_t* b = (jp_block_t *)malloc(sizeof(jp_block_t));
     if (!b) return NULL;
     b->buf = (uint8_t *)malloc(cap);
-    if (!b->buf) { free(b); return NULL; }
+    if (!b->buf)
+    {
+        free(b);
+        return NULL;
+    }
     b->cap = cap;
     b->pos = 0;
     b->next = NULL;
