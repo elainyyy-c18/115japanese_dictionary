@@ -1,3 +1,6 @@
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "../include/dict.h"
 #include "../include/fuzzy_search.h"
 #include "../include/suffix_automaton.h"
@@ -111,6 +114,10 @@ static void list_visitor(const uint8_t* key, size_t klen, void* value, void* ud)
 
 int main()
 {
+    #ifdef _WIN32
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+    #endif
     setbuf(stdout, NULL);
     section("§1  載入詞典");
     jp_dict_t* dict = jp_dict_new();
