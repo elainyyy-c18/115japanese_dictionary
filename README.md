@@ -148,10 +148,10 @@ make clean
 詞典銷毀時一次釋放整塊，不需個別 `free()`。
 
 ```c
-jp_pool_t *pool = jp_pool_new(0);          // 64 KiB 預設
-void *p1 = jp_pool_alloc(pool, sizeof(node_t));   // O(1)
-void *p2 = jp_pool_alloc(pool, sizeof(node_t));   // O(1)
-jp_pool_destroy(pool);                              // O(blocks)
+jp_pool_t* pool = jp_pool_new(0);                 // 64 KiB 預設
+void* p1 = jp_pool_alloc(pool, sizeof(node_t));   // O(1)
+void* p2 = jp_pool_alloc(pool, sizeof(node_t));   // O(1)
+jp_pool_destroy(pool);                            // O(blocks)
 ```
 
 對齊技巧：`align_up(n) = (n + ALIGN-1) & ~(ALIGN-1)`，免分支位元運算。

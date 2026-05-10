@@ -21,7 +21,7 @@ static uint8_t* pool_bytes(jp_radix_t* t, const uint8_t* src, size_t len)
     return copy;
 }
 
-static int rnode_add_child (jp_radix_t* t, jp_rnode_t* n, jp_rnode_t* c)
+static int rnode_add_child(jp_radix_t* t, jp_rnode_t* n, jp_rnode_t* c)
 {
     uint8_t nc = n->n_children;
     jp_rnode_t** arr = (jp_rnode_t **)jp_pool_alloc(t->pool, (size_t)(nc + 1) * sizeof(jp_rnode_t *));
@@ -33,14 +33,14 @@ static int rnode_add_child (jp_radix_t* t, jp_rnode_t* n, jp_rnode_t* c)
     if (nc > 0)
     {
         jp_rnode_t** old = n->u.children;
+        // 找插入點
         for (ins = 0; ins < nc; ins++)
             if (old[ins]->edge[0] > first) break;
         memcpy(arr, old, (size_t)ins * sizeof(jp_rnode_t *));
         arr[ins] = c;
         memcpy(arr + ins + 1, old + ins, (size_t)(nc - ins) * sizeof(jp_rnode_t *));
     }
-    else
-        arr[0] = c;
+    else arr[0] = c;
 
     n->u.children = arr;
     n->n_children = nc + 1;
@@ -48,7 +48,7 @@ static int rnode_add_child (jp_radix_t* t, jp_rnode_t* n, jp_rnode_t* c)
     return 0;
 }
 
-static jp_rnode_t* rnode_find_child (const jp_rnode_t* n, uint8_t b, int* idx_out)
+static jp_rnode_t* rnode_find_child(const jp_rnode_t* n, uint8_t b, int* idx_out)
 {
     if (n->n_children == 0) return NULL;
     jp_rnode_t** arr = n->u.children;
@@ -77,7 +77,7 @@ jp_radix_t* jp_radix_new(jp_pool_t* pool)
     return t->root ? t : NULL;
 }
 
-int jp_radix_insert (jp_radix_t* t, const uint8_t* key, size_t klen, void* value)
+int jp_radix_insert(jp_radix_t* t, const uint8_t* key, size_t klen, void* value)
 {
     jp_rnode_t* cur = t->root;
     size_t off = 0;
@@ -100,18 +100,17 @@ int jp_radix_insert (jp_radix_t* t, const uint8_t* key, size_t klen, void* value
             t->n_keys++;
             return rnode_add_child(t, cur, leaf);
         }
-
-        size_t cp = utf8_common_prefix_bytes_n (c->edge, c->edge_len, key + off, klen - off);
+        size_t cp = utf8_common_prefix_bytes_n(c->edge, c->edge_len, key + off, klen - off);
 
         // 情況 B：edge 完全消費 -> 繼續往下
         if (cp == c->edge_len)
         {
             off += cp;
-            cur = c;
+            cur  = c;
             continue;
         }
 
-        // 情況 C：部分匹配 -> 分裂節點 
+        // 情況 C：部分匹配 -> inplace 節點分裂
         jp_rnode_t* old_c = rnode_new(t);
         if (!old_c) return -1;
         old_c->edge = c->edge + cp;
@@ -136,6 +135,7 @@ int jp_radix_insert (jp_radix_t* t, const uint8_t* key, size_t klen, void* value
             t->n_keys++;
             return 0;
         }
+
         jp_rnode_t* leaf = rnode_new(t);
         if (!leaf) return -1;
         leaf->edge = pool_bytes(t, key + off + cp, klen - off - cp);
@@ -192,8 +192,6 @@ static void path_push(walk_ctx_t* ctx, const uint8_t* bytes, size_t n)
     memcpy(ctx->path + ctx->path_len, bytes, n);
     ctx->path_len += n;
 }
-
-// DFS 收集所有以 ctx->path 為前綴的終止節點
 static void walk(const jp_rnode_t* n, walk_ctx_t* ctx)
 {
     path_push(ctx, n->edge, n->edge_len);
@@ -223,24 +221,16 @@ size_t jp_radix_prefix_search(const jp_radix_t* t, const uint8_t* prefix, size_t
         if (rem <= el)
         {
             if (memcmp(c->edge, prefix + off, rem) != 0) return 0;
-            walk_ctx_t ctx =
+            size_t init_cap = off + el + 512;
+            walk_ctx_t ctx = 
             {
-                .path     = (uint8_t *)malloc(plen + 512),
-                .path_len = plen,
-                .path_cap = plen + 512,
-                .cb       = cb, .ud = ud, .count = 0
+                .path = (uint8_t *)malloc(init_cap),
+                .path_len = off,
+                .path_cap = init_cap,
+                .cb = cb, .ud = ud, .count = 0
             };
-            memcpy(ctx.path, prefix, plen);
-            if (rem == el && (c->flags & RNODE_TERMINAL))
-            {
-                cb(ctx.path, ctx.path_len, c->value, ud);
-                ctx.count++;
-            }
-            if (c->n_children > 0)
-            {
-                for (uint8_t i = 0; i < c->n_children; i++)
-                    walk(c->u.children[i], &ctx);
-            }
+            memcpy(ctx.path, prefix, off);
+            walk(c, &ctx);
             size_t cnt = ctx.count;
             free(ctx.path);
             return cnt;
@@ -250,8 +240,7 @@ size_t jp_radix_prefix_search(const jp_radix_t* t, const uint8_t* prefix, size_t
         off += el;
         cur = c;
     }
-
-    walk_ctx_t ctx = 
+    walk_ctx_t ctx =
     {
         .path     = (uint8_t *)malloc(plen + 512),
         .path_len = plen,
@@ -273,11 +262,9 @@ size_t jp_radix_prefix_search(const jp_radix_t* t, const uint8_t* prefix, size_t
     return cnt;
 }
 
-static void dump_node(const jp_rnode_t* n, int depth)
+static void dump_node(const jp_rnode_t* n, const char* pre, int last)
 {
-    if (!n) return;
-    for (int i = 0; i < depth * 2; i++) putchar(' ');
-    putchar('"');
+    printf("%s%s\"", pre, last ? "\\-- " : "|-- ");
     for (uint16_t i = 0; i < n->edge_len; i++)
     {
         uint8_t b = n->edge[i];
@@ -285,17 +272,21 @@ static void dump_node(const jp_rnode_t* n, int depth)
         else printf("\\x%02X", b);
     }
     putchar('"');
-    if (n->flags & RNODE_TERMINAL) printf(" [T] val=%p", n->value);
-    printf("  (ch=%u)\n", n->n_children);
+    if (n->flags & RNODE_TERMINAL) printf("  (*)");
+    if (n->n_children > 0) printf("  [%u]", n->n_children);
+    putchar('\n');
     if (n->n_children > 0)
+    {
+        char np[512];
+        snprintf(np, sizeof(np), "%s%s", pre, last ? "    " : "|   ");
         for (uint8_t i = 0; i < n->n_children; i++)
-            dump_node(n->u.children[i], depth + 1);
+            dump_node(n->u.children[i], np, i == n->n_children - 1);
+    }
 }
 
 void jp_radix_dump(const jp_radix_t* t)
 {
     printf("Radix Tree: %zu keys, %zu nodes\n", t->n_keys, t->n_nodes);
-    if (t->root->n_children > 0)
-        for (uint8_t i = 0; i < t->root->n_children; i++)
-            dump_node(t->root->u.children[i], 0);
+    for (uint8_t i = 0; i < t->root->n_children; i++)
+        dump_node(t->root->u.children[i], "", i == t->root->n_children - 1);
 }
