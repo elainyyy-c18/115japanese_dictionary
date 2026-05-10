@@ -215,7 +215,7 @@ int main()
     jp_dict_show_stats(dict);
 
     // §9 互動查詢
-    section("§9  互動查詢 (輸入動詞羅馬字，輸入 q 離開)");
+    section("§9  互動查詢 (輸入動詞羅馬拼音，輸入 q 結束)");
     printf("提示：\n");
     printf("  - 辭書形      taberu / iku / suru / nomu ...\n");
     printf("  - 拼錯沒關係  tabeuru -> 自動建議 taberu\n");
