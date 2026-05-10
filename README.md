@@ -64,7 +64,7 @@ jpdict/
 ├── README.md
 ├── .gitignore
 ├── data/
-│   └── verbs.csv            ← 動詞資料庫（可直接編輯擴充）
+│   └── verbs.csv            動詞資料庫（可直接用 Excel 編輯）
 ├── include/
 │   ├── memory_pool.h        記憶體池
 │   ├── utf8.h               UTF-8 編碼工具
@@ -97,11 +97,13 @@ make debug      # 編譯 debug 版（含 ASan / UBSan）
 make clean
 ```
 
-**方法二：手動編譯（適用無 make 的 Windows 環境）**
+**方法二：手動編譯（適用無 make 的環境）**
 
 ```bash
-mkdir -p bin
+# 編譯
 gcc src/*.c -Iinclude -o bin/jp_dict -Wall -O2
+
+# 執行（從專案根目錄執行，才能找到 data/verbs.csv）
 ./bin/jp_dict
 ```
 
@@ -110,11 +112,11 @@ gcc src/*.c -Iinclude -o bin/jp_dict -Wall -O2
 > ```bash
 > # ✓ 正確
 > cd jpdict
-> ./bin/jp_dict.exe
+> ./jp_dict
 >
 > # ✗ 錯誤（找不到 CSV）
 > cd jpdict/bin
-> ./jp_dict.exe
+> ./jp_dict
 > ```
 
 > **Windows 亂碼問題**：中文輸出需要 UTF-8 console。執行前先輸入：
@@ -150,30 +152,21 @@ jpdict/data/verbs.csv
 
 ### 用 Excel 編輯
 
-檔案已附帶 **UTF-8 BOM**（`EF BB BF`），Excel 打開時會自動辨識 UTF-8 編碼，
-平假名、中文不會亂碼。
+`verbs.csv` 採用以下設計，確保 Excel 雙擊即可正常開啟：
 
-若仍出現亂碼，請用以下步驟手動匯入：
-1. 開啟 Excel → Data（資料）→ Get Data（取得資料）→ From Text/CSV
-2. 選擇 `verbs.csv`
-3. 在 File Origin（檔案來源）下拉選單選 **65001: Unicode (UTF-8)**
-4. 分隔符號選 **Custom**，輸入 `|`
+- **編碼**：UTF-8 with BOM（`EF BB BF`）— Excel 看到 BOM 自動辨識 UTF-8，日文不會亂碼
+- **分隔符**：逗號 `,`（標準 CSV）— Excel 自動分欄
+- **換行**：CRLF（Windows 格式）
 
-> 儲存時選 **CSV UTF-8（有 BOM）**（`*.csv` 下拉選 "CSV UTF-8 (Comma delimited)"），
-> 確保存回 UTF-8 格式。
-
-### 用其他編輯器
-
-推薦 **VS Code** 或 **Notepad++**：
-- VS Code：直接開啟即可，右下角確認編碼為 `UTF-8 with BOM`
-- Notepad++：Encoding → UTF-8 with BOM
+**存檔時**：選「另存新檔」→ 格式選 **CSV UTF-8（逗號分隔）**（有 BOM 的那個選項），
+不要選一般的「CSV」，否則會失去 BOM 導致下次開啟日文再次亂碼。
 
 ### CSV 格式說明
 
-每一行代表一個動詞，欄位以 `|` 分隔：
+每一行代表一個動詞，欄位以逗號 `,` 分隔：
 
 ```
-dict_form | hiragana | meaning | verb_type | flags
+dict_form,hiragana,meaning,verb_type,flags
 ```
 
 | 欄位 | 說明 | 範例 |
@@ -202,30 +195,39 @@ dict_form | hiragana | meaning | verb_type | flags
 | `kuru` | カ変（来る） | 来る kuru |
 
 > ⚠️ **五段-る と 一段の区別**：辭書形以 `-ru` 結尾的動詞，必須手動判斷是五段-る 還是一段。
-> 光看羅馬字無法區分，因為活用完全不同：
+> 光看羅馬字無法區分，活用方式完全不同：
 > ```
-> 帰る kaeru  → 五段-る → 帰って kaette   (godan_ru)
-> 食べる taberu → 一段  → 食べて tabete    (ichidan)
+> 帰る kaeru  → 五段-る → 帰って  kaette   (godan_ru)
+> 食べる taberu → 一段  → 食べて  tabete    (ichidan)
 > ```
 
 **範例：**
-```
+
+```csv
 # 一段動詞
-taberu|たべる|to eat|ichidan|0
-miru|みる|to see|ichidan|0
-okiru|おきる|to wake up|ichidan|0
+taberu,たべる,to eat,ichidan,0
+miru,みる,to see,ichidan,0
 
 # 五段-く（行く 有不規則 te 形）
-kaku|かく|to write|godan_ku|0
-iku|いく|to go|godan_ku|iku_irregular
+kaku,かく,to write,godan_ku,0
+iku,いく,to go,godan_ku,iku_irregular
 
 # サ変
-benkyousuru|べんきょうする|to study|suru|0
+benkyousuru,べんきょうする,to study,suru,0
 ```
+
+### 注解與空行
+
+- `#` 開頭的行為注解，程式讀取時自動略過
+- 空行同樣略過，可自由分段排版
 
 ### 如何擴充詞彙
 
-只要在 `data/verbs.csv` 加一行，重新執行程式即可，**不需要重新編譯**。
+在 `data/verbs.csv` 加一行，**重新執行程式即可，不需要重新編譯**：
+
+```csv
+kangaeru,かんがえる,to think / to consider,ichidan,0
+```
 
 ---
 
@@ -270,7 +272,7 @@ benkyousuru|べんきょうする|to study|suru|0
   [SAM] 語尾 "ndeiru" → ている形（進行/狀態 鼻音便）
 ```
 
-輸入 `q` / `quit` / `exit` 結束程式。
+輸入 `q` / `quit` / `exit` 離開。
 
 ---
 
@@ -311,12 +313,11 @@ static inline int utf8_char_len(uint8_t lead)
 `utf8_common_prefix_bytes_n()` 在比較完 byte 後，會回退到字元邊界，
 確保 Radix Tree 不會在多 byte 字元中間分裂節點。
 
-CSV 解析器額外處理 **UTF-8 BOM**（`EF BB BF`）：
+CSV 解析器額外處理 **UTF-8 BOM**（`EF BB BF`），避免 Excel 存檔後的 BOM 汙染第一個欄位：
+
 ```c
 if ((unsigned char)start[0] == 0xEF && (unsigned char)start[1] == 0xBB && (unsigned char)start[2] == 0xBF)
-{
-    start += 3;   // 跳過 BOM，避免汙染第一個欄位
-}
+    start += 3;
 ```
 
 ---
@@ -442,4 +443,4 @@ dp[i][j] = dp[i-1][j-1]              if a[i-1] = b[j-1]
 - **Radix Tree 不支援 delete**：日文詞典極少需要刪除詞條
 - **SAM 用固定大小 ASCII 表**：日文後綴以羅馬字處理，字母表簡化至 27（a-z + `$`）
 - **互動模式每次重建 SAM**：適合示範用途；正式應用應將 SAM 預先建構為全域物件
-- **godan_ru 與 ichidan 需手動標記**：光看羅馬字無法區分，是日語本身的語言學限制
+- **godan_ru 與 ichidan 需手動標記**：是日語本身的語言學限制，無法從羅馬字自動判斷
