@@ -115,11 +115,11 @@ int main()
     section("§1  載入詞典");
     jp_dict_t* dict = jp_dict_new();
     load_verbs(dict);
-    printf("詞典已載入：%zu 個動詞詞條。\n", dict->n_verbs);
+    printf("詞典已載入: %zu 個動詞詞條。\n", dict->n_verbs);
 
     // Radix Tree 結構
-    section("§2  Radix Tree 結構（節點壓縮後）");
-    printf("（觀察：共享前綴的單子節點被合併成單一邊標籤）\n\n");
+    section("§2  Radix Tree 結構");
+    printf("（觀察: 共享前綴的單子節點被合併成單一邊標籤）\n\n");
     jp_radix_dump(dict->tree);
 
     section("§3  精確查詢");
@@ -127,7 +127,7 @@ int main()
     for (size_t i = 0; i < sizeof(targets)/sizeof(*targets); i++)
     {
         const jp_verb_t* v = jp_dict_lookup(dict, targets[i]);
-        printf("  lookup(\"%s\") → %s\n", targets[i], v ? "found" : "NOT FOUND");
+        printf("  lookup(\"%s\") -> %s\n", targets[i], v ? "found" : "NOT FOUND");
         if (v) jp_dict_show_verb(v);
     }
 
@@ -151,11 +151,11 @@ int main()
         if (v) jp_dict_show_conjugations(v);
     }
 
-    printf("\n注意：行く（iku）的 て形是 itte（不規則），而非 *iite。\n");
+    printf("\n注意: 行く的て形是 itte，而非 *iite。\n");
     printf("  這透過 VERB_FLAG_IKU_IRREGULAR 在 FSA 中以例外規則處理。\n");
 
     // evenshtein 模糊搜尋
-    section("§6  Levenshtein 模糊搜尋（拼字錯誤容忍）");
+    section("§6  Levenshtein 模糊搜尋 (拼字錯誤容忍)");
     const char* typos[] = {"tabreu", "iqu", "benkousuru", "okiriu", "tabueru"};
     for (size_t i = 0; i < sizeof(typos)/sizeof(*typos); i++)
     {
@@ -167,7 +167,7 @@ int main()
             printf("    distance=%d  ", results[k].distance);
             jp_dict_show_verb(results[k].verb);
         }
-        if (n == 0) printf("    （無相近結果）\n");
+        if (n == 0) printf("    (無相近結果)\n");
     }
 
     // Suffix Automaton
@@ -176,7 +176,7 @@ int main()
     jp_sam_t* sam = jp_sam_new();
     register_suffixes(sam);
     jp_sam_dump_patterns(sam);
-    printf("\n  SAM 內部狀態數：%d（< 2 × 後綴總長）\n\n", sam->sz);
+    printf("\n  SAM 內部狀態數：%d (< 2 × 後綴總長）\n\n", sam->sz);
     const char* conjugated[] =
     {
         "tabemashita",
@@ -193,7 +193,7 @@ int main()
         char matched[32] = {0};
         const char* desc  = NULL;
         verb_form_t f = jp_sam_identify(sam, conjugated[i], matched, sizeof(matched), &desc);
-        if ((int)f >= 0) printf("  \"%s\"  ->  匹配後綴 \"%s\"  （%s, %s）\n", conjugated[i], matched, jp_form_name(f), desc ? desc : "");
+        if ((int)f >= 0) printf("  \"%s\"  ->  匹配後綴 \"%s\"  (%s, %s)\n", conjugated[i], matched, jp_form_name(f), desc ? desc : "");
         else printf("  \"%s\"  ->  無匹配後綴\n", conjugated[i]);
     }
     jp_sam_destroy(sam);
