@@ -101,7 +101,7 @@ static void register_suffixes(jp_sam_t* sam)
 typedef struct
 {
     int n;
-    const jp_verb_t *items[16]; // 收集 16 筆顯示
+    const jp_verb_t* items[16]; // 收集 16 筆顯示
 } list_ctx_t;
 
 static void list_visitor(const uint8_t* key, size_t klen, void* value, void* ud)
@@ -129,7 +129,7 @@ int main()
 
     // §2 Radix Tree 結構
     section("§2  Radix Tree 結構（節點壓縮後）");
-    printf("（觀察：共享前綴的單子節點被合併成單一邊標籤）\n\n");
+    printf("（共享前綴的單字節點被合併成單邊標籤）\n\n");
     jp_radix_dump(dict->tree);
 
     // §3 精確查詢
@@ -138,7 +138,7 @@ int main()
     for (size_t i = 0; i < sizeof(targets)/sizeof(*targets); i++)
     {
         const jp_verb_t* v = jp_dict_lookup(dict, targets[i]);
-        printf("  lookup(\"%s\") → %s\n", targets[i], v ? "found" : "NOT FOUND");
+        printf("  lookup(\"%s\") -> %s\n", targets[i], v ? "found" : "NOT FOUND");
         if (v) jp_dict_show_verb(v);
     }
 
@@ -173,13 +173,13 @@ int main()
     {
         fuzzy_match_t results[5];
         size_t n = jp_fuzzy_search(dict, typos[i], 2, results, 5);
-        printf("\n  輸入 \"%s\"（容忍 distance ≤ 2）→ %zu 個建議：\n", typos[i], n);
+        printf("\n  輸入 \"%s\" (容忍 distance ≤ 2) -> %zu 個建議：\n", typos[i], n);
         for (size_t k = 0; k < n; k++)
         {
             printf("    distance=%d  ", results[k].distance);
             jp_dict_show_verb(results[k].verb);
         }
-        if (n == 0) printf("    （無相近結果）\n");
+        if (n == 0) printf("    (無相近結果) \n");
     }
 
     // §7 Suffix Automaton
