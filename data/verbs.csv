@@ -5,118 +5,118 @@
 # 特殊旗標：0（無）/ iku_irregular（行く不規則）
 #
 # ── 五段-う ─────────────────────────────────────────────────────────────
-kau|かう|to buy|godan_u|0
-au|あう|to meet / to fit|godan_u|0
-iu|いう|to say|godan_u|0
-omou|おもう|to think|godan_u|0
-tsukau|つかう|to use|godan_u|0
-narau|ならう|to learn|godan_u|0
-warau|わらう|to laugh|godan_u|0
-utau|うたう|to sing|godan_u|0
-chigau|ちがう|to differ / to be wrong|godan_u|0
-morau|もらう|to receive|godan_u|0
-tetsudau|てつだう|to help / to assist|godan_u|0
+kau,かう,to buy,godan_u,0
+au,あう,to meet / to fit,godan_u,0
+iu,いう,to say,godan_u,0
+omou,おもう,to think,godan_u,0
+tsukau,つかう,to use,godan_u,0
+narau,ならう,to learn,godan_u,0
+warau,わらう,to laugh,godan_u,0
+utau,うたう,to sing,godan_u,0
+chigau,ちがう,to differ / to be wrong,godan_u,0
+morau,もらう,to receive,godan_u,0
+tetsudau,てつだう,to help / to assist,godan_u,0
 # ── 五段-く ─────────────────────────────────────────────────────────────
-kaku|かく|to write|godan_ku|0
-kiku|きく|to listen / to ask|godan_ku|0
-iku|いく|to go|godan_ku|iku_irregular
-aruku|あるく|to walk|godan_ku|0
-hataraku|はたらく|to work|godan_ku|0
-hiraku|ひらく|to open|godan_ku|0
-tsuku|つく|to arrive / to attach|godan_ku|0
-naku|なく|to cry|godan_ku|0
-fuku|ふく|to blow / to wipe|godan_ku|0
-maku|まく|to wind / to sow|godan_ku|0
+kaku,かく,to write,godan_ku,0
+kiku,きく,to listen / to ask,godan_ku,0
+iku,いく,to go,godan_ku,iku_irregular
+aruku,あるく,to walk,godan_ku,0
+hataraku,はたらく,to work,godan_ku,0
+hiraku,ひらく,to open,godan_ku,0
+tsuku,つく,to arrive / to attach,godan_ku,0
+naku,なく,to cry,godan_ku,0
+fuku,ふく,to blow / to wipe,godan_ku,0
+maku,まく,to wind / to sow,godan_ku,0
 # ── 五段-ぐ ─────────────────────────────────────────────────────────────
-oyogu|およぐ|to swim|godan_gu|0
-isogu|いそぐ|to hurry|godan_gu|0
-nugu|ぬぐ|to take off (clothes)|godan_gu|0
-kagu|かぐ|to smell|godan_gu|0
+oyogu,およぐ,to swim,godan_gu,0
+isogu,いそぐ,to hurry,godan_gu,0
+nugu,ぬぐ,to take off (clothes),godan_gu,0
+kagu,かぐ,to smell,godan_gu,0
 # ── 五段-す ─────────────────────────────────────────────────────────────
-hanasu|はなす|to speak|godan_su|0
-kasu|かす|to lend|godan_su|0
-dasu|だす|to take out / to submit|godan_su|0
-kesu|けす|to erase / to turn off|godan_su|0
-okasu|おかす|to commit (crime)|godan_su|0
-sagasu|さがす|to search for|godan_su|0
-kowasu|こわす|to break|godan_su|0
-modosu|もどす|to return / to vomit|godan_su|0
-okosu|おこす|to wake up (someone)|godan_su|0
+hanasu,はなす,to speak,godan_su,0
+kasu,かす,to lend,godan_su,0
+dasu,だす,to take out / to submit,godan_su,0
+kesu,けす,to erase / to turn off,godan_su,0
+okasu,おかす,to commit (crime),godan_su,0
+sagasu,さがす,to search for,godan_su,0
+kowasu,こわす,to break,godan_su,0
+modosu,もどす,to return / to vomit,godan_su,0
+okosu,おこす,to wake up (someone),godan_su,0
 # ── 五段-つ ─────────────────────────────────────────────────────────────
-matsu|まつ|to wait|godan_tsu|0
-tatsu|たつ|to stand|godan_tsu|0
-katsu|かつ|to win|godan_tsu|0
-motsu|もつ|to hold / to have|godan_tsu|0
-utsu|うつ|to hit / to shoot|godan_tsu|0
+matsu,まつ,to wait,godan_tsu,0
+tatsu,たつ,to stand,godan_tsu,0
+katsu,かつ,to win,godan_tsu,0
+motsu,もつ,to hold / to have,godan_tsu,0
+utsu,うつ,to hit / to shoot,godan_tsu,0
 # ── 五段-ぬ ─────────────────────────────────────────────────────────────
-shinu|しぬ|to die|godan_nu|0
+shinu,しぬ,to die,godan_nu,0
 # ── 五段-ぶ ─────────────────────────────────────────────────────────────
-asobu|あそぶ|to play|godan_bu|0
-yobu|よぶ|to call / to invite|godan_bu|0
-tobu|とぶ|to fly / to jump|godan_bu|0
-erabu|えらぶ|to choose|godan_bu|0
-musubu|むすぶ|to tie|godan_bu|0
+asobu,あそぶ,to play,godan_bu,0
+yobu,よぶ,to call / to invite,godan_bu,0
+tobu,とぶ,to fly / to jump,godan_bu,0
+erabu,えらぶ,to choose,godan_bu,0
+musubu,むすぶ,to tie,godan_bu,0
 # ── 五段-む ─────────────────────────────────────────────────────────────
-nomu|のむ|to drink|godan_mu|0
-yomu|よむ|to read|godan_mu|0
-yasumu|やすむ|to rest|godan_mu|0
-sumu|すむ|to live / to be completed|godan_mu|0
-tanomu|たのむ|to request|godan_mu|0
-nusumu|ぬすむ|to steal|godan_mu|0
-susumu|すすむ|to advance|godan_mu|0
-tsumu|つむ|to pile up|godan_mu|0
+nomu,のむ,to drink,godan_mu,0
+yomu,よむ,to read,godan_mu,0
+yasumu,やすむ,to rest,godan_mu,0
+sumu,すむ,to live / to be completed,godan_mu,0
+tanomu,たのむ,to request,godan_mu,0
+nusumu,ぬすむ,to steal,godan_mu,0
+susumu,すすむ,to advance,godan_mu,0
+tsumu,つむ,to pile up,godan_mu,0
 # ── 五段-る（注意：與一段動詞同形但活用不同！）──────────────────────
-kaeru|かえる|to return home|godan_ru|0
-toru|とる|to take|godan_ru|0
-kiru|きる|to cut|godan_ru|0
-hashiru|はしる|to run|godan_ru|0
-shiru|しる|to know|godan_ru|0
-hairu|はいる|to enter|godan_ru|0
-kiru2|きる|to wear (upper body)|godan_ru|0
-noru|のる|to ride|godan_ru|0
-furu|ふる|to fall (rain/snow)|godan_ru|0
-iru|いる|to need / to be (place)|godan_ru|0
-majiru|まじる|to mix|godan_ru|0
+kaeru,かえる,to return home,godan_ru,0
+toru,とる,to take,godan_ru,0
+kiru,きる,to cut,godan_ru,0
+hashiru,はしる,to run,godan_ru,0
+shiru,しる,to know,godan_ru,0
+hairu,はいる,to enter,godan_ru,0
+kiru2,きる,to wear (upper body),godan_ru,0
+noru,のる,to ride,godan_ru,0
+furu,ふる,to fall (rain/snow),godan_ru,0
+iru,いる,to need / to be (place),godan_ru,0
+majiru,まじる,to mix,godan_ru,0
 # ── 一段（る動詞：て形は単純に「て」を追加）────────────────────────
-taberu|たべる|to eat|ichidan|0
-miru|みる|to see|ichidan|0
-neru|ねる|to sleep|ichidan|0
-okiru|おきる|to wake up|ichidan|0
-oshieru|おしえる|to teach|ichidan|0
-akeru|あける|to open|ichidan|0
-shimeru|しめる|to close|ichidan|0
-deru|でる|to leave / to appear|ichidan|0
-ireru|いれる|to put in|ichidan|0
-kariru|かりる|to borrow|ichidan|0
-ageru|あげる|to give / to raise|ichidan|0
-kureru|くれる|to give (to me)|ichidan|0
-tsukeru|つける|to attach / to turn on|ichidan|0
-kotaeru|こたえる|to answer|ichidan|0
-kangaeru|かんがえる|to think / to consider|ichidan|0
-azukeru|あずける|to entrust|ichidan|0
-koeru|こえる|to exceed / to pass over|ichidan|0
-kasaneru|かさねる|to pile up|ichidan|0
-hajimeru|はじめる|to begin|ichidan|0
-yameru|やめる|to stop / to quit|ichidan|0
-kimeru|きめる|to decide|ichidan|0
-atsumeru|あつめる|to collect|ichidan|0
-miseru|みせる|to show|ichidan|0
-mukaeru|むかえる|to welcome / to pick up|ichidan|0
-tasukeru|たすける|to help / to save|ichidan|0
-migakeru|みがける|to polish / to improve|ichidan|0
-umareru|うまれる|to be born|ichidan|0
+taberu,たべる,to eat,ichidan,0
+miru,みる,to see,ichidan,0
+neru,ねる,to sleep,ichidan,0
+okiru,おきる,to wake up,ichidan,0
+oshieru,おしえる,to teach,ichidan,0
+akeru,あける,to open,ichidan,0
+shimeru,しめる,to close,ichidan,0
+deru,でる,to leave / to appear,ichidan,0
+ireru,いれる,to put in,ichidan,0
+kariru,かりる,to borrow,ichidan,0
+ageru,あげる,to give / to raise,ichidan,0
+kureru,くれる,to give (to me),ichidan,0
+tsukeru,つける,to attach / to turn on,ichidan,0
+kotaeru,こたえる,to answer,ichidan,0
+kangaeru,かんがえる,to think / to consider,ichidan,0
+azukeru,あずける,to entrust,ichidan,0
+koeru,こえる,to exceed / to pass over,ichidan,0
+kasaneru,かさねる,to pile up,ichidan,0
+hajimeru,はじめる,to begin,ichidan,0
+yameru,やめる,to stop / to quit,ichidan,0
+kimeru,きめる,to decide,ichidan,0
+atsumeru,あつめる,to collect,ichidan,0
+miseru,みせる,to show,ichidan,0
+mukaeru,むかえる,to welcome / to pick up,ichidan,0
+tasukeru,たすける,to help / to save,ichidan,0
+migakeru,みがける,to polish / to improve,ichidan,0
+umareru,うまれる,to be born,ichidan,0
 # ── サ変（する動詞）─────────────────────────────────────────────────
-suru|する|to do|suru|0
-benkyousuru|べんきょうする|to study|suru|0
-undousuru|うんどうする|to exercise|suru|0
-ryokousuru|りょこうする|to travel|suru|0
-renshuusuru|れんしゅうする|to practice|suru|0
-shigotosuru|しごとする|to work|suru|0
-kaimononosuru|かいものをする|to go shopping|suru|0
-denwaosuru|でんわをする|to make a phone call|suru|0
-setsumieisuru|せつめいする|to explain|suru|0
-souji suru|そうじする|to clean|suru|0
-ryourisuru|りょうりする|to cook|suru|0
-sanposuru|さんぽする|to take a walk|suru|0
+suru,する,to do,suru,0
+benkyousuru,べんきょうする,to study,suru,0
+undousuru,うんどうする,to exercise,suru,0
+ryokousuru,りょこうする,to travel,suru,0
+renshuusuru,れんしゅうする,to practice,suru,0
+shigotosuru,しごとする,to work,suru,0
+kaimononosuru,かいものをする,to go shopping,suru,0
+denwaosuru,でんわをする,to make a phone call,suru,0
+setsumieisuru,せつめいする,to explain,suru,0
+souji suru,そうじする,to clean,suru,0
+ryourisuru,りょうりする,to cook,suru,0
+sanposuru,さんぽする,to take a walk,suru,0
 # ── カ変（来る）─────────────────────────────────────────────────────
-kuru|くる|to come|kuru|0
+kuru,くる,to come,kuru,0

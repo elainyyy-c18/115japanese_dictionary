@@ -100,7 +100,8 @@ void jp_dict_show_conjugations(const jp_verb_t* v)
     printf("├────────────────────────────────────────────────────────┤\n");
     for (verb_form_t f = FORM_DICT; f < FORM_COUNT; f++)
     {
-        if (jp_fsa_conjugate(v, f, buf, sizeof(buf))) printf("│  %-13s  %s\n", jp_form_name(f), buf);
+        if (jp_fsa_conjugate(v, f, buf, sizeof(buf)))
+            printf("│  %-13s  %s\n", jp_form_name(f), buf);
     }
     printf("└────────────────────────────────────────────────────────┘\n");
 }
@@ -159,7 +160,7 @@ int jp_dict_load_csv(jp_dict_t *d, const char *filepath)
         while (n < 5 && p)
         {
             f[n++] = p;
-            p = strchr(p, '|');
+            p = strchr(p, ',');
             if (p) *p++ = '\0';
         }
         if (n < 5) continue;
