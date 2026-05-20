@@ -121,7 +121,7 @@ int main()
     #endif
     setbuf(stdout, NULL);
 
-    // §1 載入詞典
+    // 1 載入詞典
     section("§1  載入詞典");
     jp_dict_t* dict = jp_dict_new();
     const char *csv_paths[] =
@@ -148,12 +148,12 @@ int main()
         printf("內建詞典已載入：%zu 個動詞詞條。\n", dict->n_verbs);
     }
 
-    // §2 Radix Tree 結構
+    // 2 Radix Tree 結構
     section("§2  Radix Tree 結構");
     printf("（共享前綴的單字節點被合併成單邊標籤）\n\n");
     jp_radix_dump(dict->tree);
 
-    // §3 精確查詢
+    // 3 精確查詢
     section("§3  精確查詢");
     const char* targets[] = {"taberu", "iku", "benkyousuru", "doesnt_exist"};
     for (size_t i = 0; i < sizeof(targets)/sizeof(*targets); i++)
@@ -163,7 +163,7 @@ int main()
         if (v) jp_dict_show_verb(v);
     }
 
-    // §4 前綴搜尋
+    // 4 前綴搜尋
     section("§4  前綴搜尋");
     const char* prefixes[] = {"ka", "y", "tab", "ben"};
     for (size_t i = 0; i < sizeof(prefixes)/sizeof(*prefixes); i++)
@@ -174,7 +174,7 @@ int main()
         for (int k = 0; k < ctx.n; k++) jp_dict_show_verb(ctx.items[k]);
     }
 
-    // §5 FSA 動詞活用
+    // 5 FSA 動詞活用
     section("§5  FSA 活用引擎");
 
     const char* demo_verbs[] = {"taberu", "kaku", "iku", "matsu", "asobu", "hanasu", "suru", "kuru"};
@@ -187,7 +187,7 @@ int main()
     printf("\n 注意：行く的 て形是 itte 而非 *iite。\n");
     printf("    這透過 VERB_FLAG_IKU_IRREGULAR 在 FSA 中以例外規則處理。\n");
 
-    // §6 Levenshtein 模糊搜尋
+    // 6 Levenshtein 模糊搜尋
     section("§6  Levenshtein 模糊搜尋 (拼字錯誤修正)");
 
     const char* typos[] = {"tabreu", "iqu", "benkousuru", "okiriu", "tabueru"};
@@ -204,7 +204,7 @@ int main()
         if (n == 0) printf("    (無相近結果) \n");
     }
 
-    // §7 Suffix Automaton
+    // 7 Suffix Automaton
     section("§7  Suffix Automaton — 從活用形反推活用類型");
     jp_sam_t* sam = jp_sam_new();
     register_suffixes(sam);
@@ -212,14 +212,14 @@ int main()
     printf("\n  SAM 內部狀態數：%d (< 2 × 後綴總長) \n\n", sam->sz);
     const char* conjugated[] =
     {
-        "tabemashita",      /* 食べました：丁寧過去      */
-        "kaitenai",         /* 書いてない：て形＋ない    */
-        "asondeshimatta",   /* 遊んでしまった：後悔完了  */
-        "ikimasen",         /* 行きません：丁寧否定      */
-        "nondeiru",         /* 飲んでいる：進行          */
-        "korareru",         /* 来られる：可能・受身      */
-        "kawanai",          /* 買わない：普通否定        */
-        "hanashita",        /* 話した：た形              */
+        "tabemashita",
+        "kaitenai",
+        "asondeshimatta",
+        "ikimasen",
+        "nondeiru",
+        "korareru",
+        "kawanai",
+        "hanashita",
     };
     for (size_t i = 0; i < sizeof(conjugated)/sizeof(*conjugated); i++)
     {
@@ -232,11 +232,11 @@ int main()
 
     jp_sam_destroy(sam);
 
-    // §8 統計與資源 
+    // 8 統計與資源 
     section("§8  Memory Pool 統計 (單次大塊配置 vs 數百次 malloc)");
     jp_dict_show_stats(dict);
 
-    // §9 互動查詢
+    // 9 互動查詢
     section("§9  互動查詢 (輸入動詞羅馬拼音，輸入 q 結束)");
     printf("提示：\n");
     printf("  - 辭書形      taberu / iku / suru / nomu ...\n");
@@ -257,7 +257,7 @@ int main()
             break;
         }
 
-        // 1. 精確查詢：找到就印全部活用
+        // 精確查詢：找到就印全部活用
         const jp_verb_t* v = jp_dict_lookup(dict, line);
         if (v)
         {
@@ -265,7 +265,7 @@ int main()
             continue;
         }
 
-        // 2. Suffix Automaton：嘗試識別已活用的語尾
+        // Suffix Automaton：嘗試識別已活用的語尾
         jp_sam_t* isam = jp_sam_new();
         register_suffixes(isam);
         char imatch[32] = {0};
@@ -276,7 +276,7 @@ int main()
         if ((int)iform >= 0 && imatch[0])
             printf("\n  [SAM] 語尾 \"%s\" -> %s (%s) \n", imatch, jp_form_name(iform), idesc ? idesc : "");
 
-        // 3. Levenshtein 模糊建議
+        // Levenshtein 模糊推薦
         fuzzy_match_t sug[4];
         size_t ns = jp_fuzzy_search(dict, line, 2, sug, 4);
         if (ns > 0)

@@ -1,6 +1,6 @@
 # jpdict — 日文動詞詞典與活用引擎
 
-> 一個從零打造的高效能日文動詞活用詞典，以 C 語言探索資訊核心資料結構與演算法。
+> 以 C 語言撰寫核心資料結構與演算法，從零打造高效能日文動詞活用詞典。
 
 ---
 
@@ -106,7 +106,7 @@ gcc src/*.c -Iinclude -o bin/jp_dict -Wall -O2
 ./bin/jp_dict
 ```
 
-> **⚠️ 執行位置很重要**：必須從**專案根目錄**執行，程式才能找到 `data/verbs.csv`。
+> ⚠️必須從**專案根目錄**執行，程式才能找到 `data/verbs.csv`。
 >
 > ```bash
 > # ✓ 正確
@@ -258,7 +258,7 @@ kangaeru,かんがえる,to think / to consider,ichidan,0
     taberu    distance=1   to eat
 ```
 
-### 3. 已活用的形式 → Suffix Automaton 識別語尾
+### 3. 已活用的形式 → Suffix Automaton 辨識語尾
 
 ```
 動詞> tabemashita
@@ -387,7 +387,7 @@ dp[i][j] = dp[i-1][j-1]              if a[i-1] = b[j-1]
 
 ### 6. Suffix Automaton
 
-由 Blumer et al. (1985) 提出的最小化 DFA，接受字串 T 的所有 substring。
+由 Blumer et al. 提出的最小化 DFA，接受字串 T 的所有 substring。
 
 | 量 | 上界 |
 |---|------|
@@ -395,7 +395,7 @@ dp[i][j] = dp[i-1][j-1]              if a[i-1] = b[j-1]
 | 建構時間 | O(\|T\| · \|Σ\|) |
 | 查詢時間 | O(\|P\|) |
 
-應用：將所有已知後綴反轉並以 `$` 分隔串接建構 SAM(T)。查詢時反轉輸入末尾，
+將所有已知後綴反轉並以 `$` 分隔串接建構 SAM(T)。查詢時反轉輸入末尾，
 沿 SAM 前進，每步檢查 `$` 轉移；最後以 `memcmp` 驗證排除偽陽性。
 
 已知後綴涵蓋所有音便變體（32 個 pattern）：
